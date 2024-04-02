@@ -2,15 +2,15 @@ const Module = require('../models/module');
 
 // Controller function to add a module
 exports.addModule = async (req, res) => {
-    const { moduleName, startDate, endDate, quizId } = req.body;
+    const { moduleName, startDate, endDate } = req.body;
 
     try {
         // Create a new module instance
         const newModule = new Module({
             moduleName,
             startDate,
-            endDate,
-            quizId // Add quizId to the new module
+            endDate
+            // quizId
         });
 
         // Save the new module to the database
@@ -24,8 +24,13 @@ exports.addModule = async (req, res) => {
 
 
 
+
 exports.getModule = async (req, res) => {
     try {
+        // Update module status based on current date
+        await updateModuleStatus();
+
+        // Fetch modules
         const modules = await Module.find({}); // Projecting only moduleId and moduleName fields
 
         if (!modules || modules.length === 0) {
@@ -36,7 +41,38 @@ exports.getModule = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
+}
+
+async function updateModuleStatus() {
+    const currentDate = new Date();
+
+    // Update modules based on current date
+    await Module.updateMany(
+        {
+            endDate: { $lt: currentDate },
+            moduleStatus: { $ne: 'complete' }
+        },
+        { $set: { moduleStatus: 'complete' } }
+    );
+
+    await Module.updateMany(
+        {
+            startDate: { $lte: currentDate },
+            endDate: { $gte: currentDate },
+            moduleStatus: { $ne: 'ongoing' }
+        },
+        { $set: { moduleStatus: 'ongoing' } }
+    );
+
+    await Module.updateMany(
+        {
+            startDate: { $gt: currentDate },
+            moduleStatus: { $ne: 'pending' }
+        },
+        { $set: { moduleStatus: 'pending' } }
+    );
 };
+
 
 
 exports.updateModule = async (req, res) => {

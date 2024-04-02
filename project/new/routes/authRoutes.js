@@ -10,7 +10,7 @@ const { addModule, getModule, updateModule, deleteModule } = require('../control
 const { insertQuizQuestion,getQuestionsByTopic,checkAnswer, getAllTopicNames } = require('../controlers/quiz');
 const { addUserModule } = require('../controlers/addusermodule');
 const { createUser,getAllUsers,getUserById,deleteUser,updateUser } = require('../controlers/regController');
-const { createEvent,getAllEvents } = require('../controlers/EventController');
+const { createEvent,getAllEvents,updateEvent,deleteEvent } = require('../controlers/EventController');
 
 
 
@@ -29,11 +29,25 @@ router.post('/users/updateuser/:id', requireAuth, updateUser);
 
 
 
+// Route for adding a module
+router.post('/addmodule',addModule);
+
+// Route for getting all modules
+router.get('/modules', getModule);
+
+// Route for updating a module
+router.post('/modules/:Id',updateModule);
+
+// Route for deleting a module
+router.delete('/modules/:Id',deleteModule);
+
+
+
 // router.post('/forgot', passwordResetController.requestPasswordReset);
 // router.post('/reset', passwordResetController.resetPassword);
 
 router.post('/reset-password',passwordResetController.resetPassword);
-router.post('/addmodule',addModule);
+
 
 router.post('/insertQuiz',insertQuizQuestion);
 
@@ -41,10 +55,12 @@ router.get('/getQuestionsByTopic/:topic',getQuestionsByTopic);
 
 router.post('/checkAnswer',checkAnswer);
 router.get('/topic',getAllTopicNames);
-router.get('/module',getModule);
+
 router.post('/addusermodule',addUserModule);
 
 router.post('/createevent',createEvent);
+router.post('/events/:id',updateEvent);
+router.delete('/delevent/:id',deleteEvent);
 router.get('/getevent',getAllEvents);
 
 

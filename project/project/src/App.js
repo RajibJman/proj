@@ -16,6 +16,11 @@ import LoginPage from './Login';
 import PasswordResetForm from './passReset';
 import AddQuizForm from './component/addquiz';
 import UserList from './page/UserCRUD';
+import ModuleList from './page/ModuleCRUD';
+import UserDashboard from './page/UserDashboard';
+import UserModule from './page/UserModule';
+import ModuleStatus from './page/ModuleStatus';
+
 
 
 
@@ -32,12 +37,16 @@ function App() {
         <Route path="/passReset" element={<PasswordResetForm/>}/>
         <Route path="/allUser" element={<Axlldata/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path="/userdashboard" element={<UserDashboard/>}/>
         <Route path="/navbar" element={<Navbar/>}/>
         <Route path="/sidebar" element={<Sidebar/>}/>
         <Route path="/addmodule" element={<AddModule/>}/>
         <Route path="/addusermodule" element={<AddUserModule/>}/>
         <Route path="/addquiz" element={<AddQuizForm/>}/>
         <Route path="/user" element={<UserList/>}/>
+        <Route path="/module" element={<ModuleList/>}/>
+        <Route path="/usermodule" element={<UserModule/>}/>
+        <Route path="/modulestatus" element={<ModuleStatus/>}/>
     </Routes>
     </BrowserRouter>
 

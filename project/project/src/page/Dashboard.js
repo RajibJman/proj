@@ -14,6 +14,7 @@ const localizer = momentLocalizer(moment);
 const Dashboard = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [events, setEvents] = useState([]);
 
   const fetchEvents = async () => {
@@ -25,7 +26,9 @@ const Dashboard = () => {
           id: event._id,
           title: `${event.details} - ${event.time}`,
           start: moment(event.date).toDate(),
-          end: moment(event.date).toDate()
+          end: moment(event.date).toDate(),
+          details: event.details,
+          time: event.time,
         }));
         setEvents(formattedEvents);
       } else {
@@ -38,16 +41,23 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchEvents();
-  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
+  }, []);
 
   const handleSelectSlot = (slotInfo) => {
     setShowDialog(true);
     setSelectedDate(slotInfo.start);
+    setSelectedEvent(null);
+  };
+
+  const handleSelectEvent = (event) => {
+    setShowDialog(true);
+    setSelectedEvent(event);
   };
 
   const handleDialogClose = () => {
     setShowDialog(false);
     setSelectedDate(null);
+    setSelectedEvent(null);
   };
 
   const handleAddEvent = async (event) => {
@@ -68,9 +78,51 @@ const Dashboard = () => {
 
       if (response.ok) {
         console.log('Event created successfully');
-        fetchEvents(); // Fetch events again to update the calendar with the newly added event
+        fetchEvents();
       } else {
         console.error('Failed to create event:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+
+    handleDialogClose();
+  };
+
+  const handleUpdateEvent = async (event) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/auth/events/${selectedEvent.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(event)
+      });
+
+      if (response.ok) {
+        console.log('Event updated successfully');
+        fetchEvents();
+      } else {
+        console.error('Failed to update event:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+
+    handleDialogClose();
+  };
+
+  const handleDeleteEvent = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/auth/delevent/${selectedEvent.id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        console.log('Event deleted successfully');
+        fetchEvents();
+      } else {
+        console.error('Failed to delete event:', response.statusText);
       }
     } catch (error) {
       console.error('Error:', error.message);
@@ -120,6 +172,7 @@ const Dashboard = () => {
             localizer={localizer}
             selectable
             onSelectSlot={handleSelectSlot}
+            onSelectEvent={handleSelectEvent}
             events={events}
             eventPropGetter={(event, start, end, isSelected) => {
               const backgroundColor = isSelected ? '#3174ad' : '#3788d8';
@@ -140,29 +193,36 @@ const Dashboard = () => {
       {showDialog && (
         <EventDialog
           selectedDate={selectedDate}
+          selectedEvent={selectedEvent}
           onClose={handleDialogClose}
           onAddEvent={handleAddEvent}
+          onUpdateEvent={handleUpdateEvent}
+          onDeleteEvent={handleDeleteEvent}
         />
       )}
     </div>
   );
 };
 
-const EventDialog = ({ selectedDate, onClose, onAddEvent }) => {
-  const [time, setTime] = useState('');
-  const [details, setDetails] = useState('');
+const EventDialog = ({ selectedDate, selectedEvent, onClose, onAddEvent, onUpdateEvent, onDeleteEvent }) => {
+  const [time, setTime] = useState(selectedEvent ? selectedEvent.time : '');
+  const [details, setDetails] = useState(selectedEvent ? selectedEvent.details : '');
 
-  const handleAddEvent = () => {
-    const event = {
-      time,
-      details,
-    };
-    onAddEvent(event);
+  const handleEventAction = () => {
+    if (selectedEvent) {
+      onUpdateEvent({ id: selectedEvent.id, time, details });
+    } else {
+      onAddEvent({ time, details });
+    }
+  };
+
+  const handleDeleteEvent = () => {
+    onDeleteEvent();
   };
 
   return (
     <div className="event-dialog" style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', backgroundColor: 'white', padding: '20px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
-      <h2>Add Event</h2>
+      <h2>{selectedEvent ? 'Edit Event' : 'Add Event'}</h2>
       <div>
         <p><strong>Date:</strong> {moment(selectedDate).format('LL')}</p>
         <label>
@@ -177,7 +237,8 @@ const EventDialog = ({ selectedDate, onClose, onAddEvent }) => {
         </label>
       </div>
       <div>
-        <button onClick={handleAddEvent} style={{ marginRight: '10px' }}>Add Event</button>
+        <button onClick={handleEventAction} style={{ marginRight: '10px' }}>{selectedEvent ? 'Update Event' : 'Add Event'}</button>
+        {selectedEvent && <button onClick={handleDeleteEvent} style={{ backgroundColor: 'red', color: 'white' }}>Delete Event</button>}
         <button onClick={onClose}>Cancel</button>
       </div>
     </div>

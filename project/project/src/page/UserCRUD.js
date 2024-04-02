@@ -51,7 +51,7 @@ function UserList() {
         role: updateRole
       };
   
-      await axios.put(`http://localhost:3000/api/auth/users/updateuser/${updateUserId}`, userData, {
+      await axios.post(`http://localhost:3000/api/auth/users/updateuser/${updateUserId}`, userData, {
         headers: {
           Authorization: `Bearer ${token}`
         }

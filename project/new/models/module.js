@@ -23,7 +23,8 @@ const moduleSchema = new Schema({
     // Add reference to Quiz collection _id
     quizId: {
         type: Schema.Types.ObjectId, // Reference to Quiz collection's _id
-        ref: 'Quiz' // Name of the referenced collection
+        ref: 'Quiz', // Name of the referenced collection
+        required: false
     }
 });
 
