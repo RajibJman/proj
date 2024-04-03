@@ -4,10 +4,13 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Route, Routes } from 'react-router-dom';
 import RegistrationPage from './registration';
-import AddUserModule from '../component/AddUserModule';
-import AddQuizForm from '../component/addquiz';
 import Navbar from '../component/NAvbar';
 import Button from '@mui/material/Button';
+import AddUserModule from '../component/AddUserModule';
+import QuizModule from '../component/QuizModule';
+import AddQuizForm from '../component/addquiz';
+
+
 
 const localizer = momentLocalizer(moment);
 
@@ -163,6 +166,25 @@ const Dashboard = () => {
                 href="/quiz"
               >
                 Quiz
+              </Button>
+            </li>
+            <li style={{ marginBottom: '10px' }}>
+              
+                <AddUserModule></AddUserModule>
+              
+            </li>
+            <li style={{ marginBottom: '10px' }}>
+              
+              <QuizModule></QuizModule>
+            
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+              <Button
+                variant="contained"
+                style={{ backgroundColor: '#ff9800', fontSize: '1.2rem', width: '100%', marginBottom: '10px' }}
+                href="/addquiz"
+              >
+                Add Quiz
               </Button>
             </li>
           </ul>

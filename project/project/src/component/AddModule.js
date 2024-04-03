@@ -34,13 +34,11 @@ const AddModule = ({ open, onClose, onSubmit }) => {
   const handleSubmit = async () => {
     try {
       const moduleData = {
-        moduleName,
-        startDate,
-        endDate,
+        
         quizId: selectedQuiz
       };
 
-      const response = await fetch('http://localhost:3000/api/auth/addmodule', {
+      const response = await fetch('http://localhost:3000/api/auth/modulequiz', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

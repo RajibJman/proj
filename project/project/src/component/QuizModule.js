@@ -12,47 +12,43 @@ const StyledButton = styled(Button)({
 });
 
 const OrangeButton = styled(Button)({
-  backgroundColor: '#ff9800',
+//   backgroundColor: '#ff9800',
   fontSize: '1.2rem',
   width: '100%',
   marginBottom: '10px',
 });
 
-const AddUserModuleButton = styled(Button)({
-  // backgroundColor: '#ff9800',
-  fontSize: '1.2rem',
-  width: '100%',
-  marginBottom: '10px',
-});
-
-function AddUserModule() {
-  const [users, setUsers] = useState([]);
+function QuizModule() {
   const [modules, setModules] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
+  const [quizzes, setQuizzes] = useState([]);
   const [selectedModule, setSelectedModule] = useState("");
+  const [selectedQuiz, setSelectedQuiz] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/auth/allData")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.user); // Logging user data to check structure
-        setUsers(data.user);
-      })
-      .catch((error) => console.error("Error fetching user data:", error));
-
     fetch("http://localhost:3000/api/auth/modules")
       .then((response) => response.json())
-      .then((data) => setModules(data.modules))
+      .then((data) => {
+        if (data.modules) {
+          setModules(data.modules);
+        } else {
+          console.error("Modules data not found:", data);
+        }
+      })
       .catch((error) => console.error("Error fetching module data:", error));
-  }, []);
 
-  const handleUserChange = (event) => {
-    setSelectedUser(event.target.value);
-  };
+    fetch("http://localhost:3000/api/auth/alltopics")
+      .then((response) => response.json())
+      .then((data) => setQuizzes(data))
+      .catch((error) => console.error("Error fetching quiz data:", error));
+  }, []);
 
   const handleModuleChange = (event) => {
     setSelectedModule(event.target.value);
+  };
+
+  const handleQuizChange = (event) => {
+    setSelectedQuiz(event.target.value);
   };
 
   const handleDialogOpen = () => {
@@ -64,20 +60,21 @@ function AddUserModule() {
   };
 
   const addUserModule = () => {
-    if (selectedUser && selectedModule) {
+    if (selectedModule && selectedQuiz) {
       // Prepare the request body
       const requestBody = {
-        selectedUser_id: selectedUser,
-        selectedModule_id: selectedModule
+        moduleId: selectedModule,
+        quizId: selectedQuiz
       };
   
       // Send a POST request to the specified endpoint
-      fetch('http://localhost:3000/api/auth/addusermodule', {
+      fetch('http://localhost:3000/api/auth//modulequiz', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestBody),
+        
       })
         .then(response => {
           if (!response.ok) {
@@ -88,6 +85,9 @@ function AddUserModule() {
         .then(data => {
           console.log('Module added for user:', data);
           handleDialogClose(); // Close the dialog after successful update
+          alert('Module added successfully');
+          setSelectedModule("");
+        setSelectedQuiz("");
         })
         .catch(error => console.error('Error adding module:', error));
     }
@@ -96,28 +96,12 @@ function AddUserModule() {
 
   return (
     <div>
-      <AddUserModuleButton variant="contained" color="primary" onClick={handleDialogOpen}>
-        AddUserModule
-      </AddUserModuleButton>
+      <OrangeButton variant="contained" color="primary" onClick={handleDialogOpen}>
+        AddModuleQuiz
+      </OrangeButton>
       <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle>Add Module for User</DialogTitle>
+        <DialogTitle>Add Quiz For Module</DialogTitle>
         <DialogContent>
-          <StyledFormControl>
-            <InputLabel id="userDropdownLabel">Select User</InputLabel>
-            <Select
-              labelId="userDropdownLabel"
-              id="userDropdown"
-              value={selectedUser}
-              onChange={handleUserChange}
-              fullWidth
-            >
-              {users.map((user) => (
-                <MenuItem key={user._id} value={user._id}>
-                  {user.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </StyledFormControl>
           <StyledFormControl>
             <InputLabel id="moduleDropdownLabel">Select Module</InputLabel>
             <Select
@@ -134,18 +118,34 @@ function AddUserModule() {
               ))}
             </Select>
           </StyledFormControl>
+          <StyledFormControl>
+            <InputLabel id="quizDropdownLabel">Select Quiz Topic</InputLabel>
+            <Select
+              labelId="quizDropdownLabel"
+              id="quizDropdown"
+              value={selectedQuiz}
+              onChange={handleQuizChange}
+              fullWidth
+            >
+              {quizzes.map((quiz) => (
+                <MenuItem key={quiz._id} value={quiz._id}>
+                  {quiz.topic}
+                </MenuItem>
+              ))}
+            </Select>
+          </StyledFormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose} color="primary">
             Cancel
           </Button>
-          <OrangeButton onClick={addUserModule} color="primary">
-            Add Module
-          </OrangeButton>
+          <Button onClick={addUserModule} color="primary">
+            Add Quiz
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
   );
 }
 
-export default AddUserModule;
+export default QuizModule;

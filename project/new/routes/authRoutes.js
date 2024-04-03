@@ -7,10 +7,12 @@ const authController = require('../controlers/authController');
 const { requireAuth } = require('../middleware/authmiddleware');
 const passwordResetController = require('../controlers/passwordResetController');
 const { addModule, getModule, updateModule, deleteModule } = require('../controlers/moduleController');
-const { insertQuizQuestion,getQuestionsByTopic,checkAnswer, getAllTopicNames } = require('../controlers/quiz');
+const { getQuestionsByTopicId,insertQuizQuestion,getAllTopicNames,checkAnswerByTopicId} = require('../controlers/quiz');
 const { addUserModule } = require('../controlers/addusermodule');
 const { createUser,getAllUsers,getUserById,deleteUser,updateUser } = require('../controlers/regController');
 const { createEvent,getAllEvents,updateEvent,deleteEvent } = require('../controlers/EventController');
+const { getAllMarks,getMarksByModuleId,getMarksByUserId,addMarks } = require('../controlers/marksController');
+const updateModuleQuizId = require('../controlers/modulequiz');
 
 
 
@@ -26,6 +28,8 @@ router.get('/users/:id',requireAuth,getUserById);
 router.delete('/users/delete/:id', requireAuth, deleteUser);
 router.post('/users/updateuser/:id', requireAuth, updateUser);
 
+
+router.post('/modulequiz',updateModuleQuizId);
 
 
 
@@ -49,12 +53,12 @@ router.delete('/modules/:Id',deleteModule);
 router.post('/reset-password',passwordResetController.resetPassword);
 
 
-router.post('/insertQuiz',insertQuizQuestion);
+// router.post('/insertQuiz',insertQuizQuestion);
 
-router.get('/getQuestionsByTopic/:topic',getQuestionsByTopic); 
+// router.get('/getQuestionsByTopic/:topic',getQuestionsByTopic); 
 
-router.post('/checkAnswer',checkAnswer);
-router.get('/topic',getAllTopicNames);
+// router.post('/checkAnswer',checkAnswer);
+// router.get('/topic',getAllTopicNames);
 
 router.post('/addusermodule',addUserModule);
 
@@ -62,6 +66,25 @@ router.post('/createevent',createEvent);
 router.post('/events/:id',updateEvent);
 router.delete('/delevent/:id',deleteEvent);
 router.get('/getevent',getAllEvents);
+
+router.post('/insertquiz', insertQuizQuestion);
+router.get('/quiz/:topicId', getQuestionsByTopicId);
+router.post('/quiz/:topicId/check-answer', checkAnswerByTopicId);
+router.get('/alltopics', getAllTopicNames);
+
+
+
+// Route to add marks
+router.post('/addmarks', addMarks);
+
+// Route to get all marks
+router.get('/allmarks', getAllMarks);
+
+// Route to get marks by module ID
+router.get('/marks/module/:moduleId', getMarksByModuleId);
+
+// Route to get marks by user ID
+router.get('/marks/user/:userId', getMarksByUserId);
 
 
 module.exports = router;

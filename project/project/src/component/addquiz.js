@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './AddQuizForm.css';
+import './AddQuizForm.css'; // Import CSS file
+import './addquiz.css';
+
 const AddQuizForm = () => {
   const [quizData, setQuizData] = useState({
     topic: '',

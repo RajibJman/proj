@@ -20,6 +20,8 @@ import ModuleList from './page/ModuleCRUD';
 import UserDashboard from './page/UserDashboard';
 import UserModule from './page/UserModule';
 import ModuleStatus from './page/ModuleStatus';
+import QuizModule from './component/QuizModule';
+
 
 
 
@@ -47,6 +49,7 @@ function App() {
         <Route path="/module" element={<ModuleList/>}/>
         <Route path="/usermodule" element={<UserModule/>}/>
         <Route path="/modulestatus" element={<ModuleStatus/>}/>
+        <Route path="/quizmodule" element={<QuizModule/>}/>
     </Routes>
     </BrowserRouter>
 
