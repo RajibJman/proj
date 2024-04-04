@@ -97,7 +97,7 @@ function QuizModule() {
   return (
     <div>
       <OrangeButton variant="contained" color="primary" onClick={handleDialogOpen}>
-        AddModuleQuiz
+        Add Module Quiz
       </OrangeButton>
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <DialogTitle>Add Quiz For Module</DialogTitle>

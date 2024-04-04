@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import AddUserModule from '../component/AddUserModule';
 import QuizModule from '../component/QuizModule';
 import AddQuizForm from '../component/addquiz';
+import AddModuleTrainer from '../component/AddModuleTrainer';
 
 
 
@@ -171,6 +172,13 @@ const Dashboard = () => {
               <QuizModule></QuizModule>
             
           </li>
+
+          <li style={{ marginBottom: '10px' }}>
+              
+              <AddModuleTrainer></AddModuleTrainer>
+            
+          </li>
+
           <li style={{ marginBottom: '10px' }}>
               <Button
                 variant="contained"

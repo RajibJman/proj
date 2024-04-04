@@ -23,6 +23,8 @@ import QuizModule from './component/QuizModule';
 import AllModule from './page/AllModule';
 import QuizPage from './page/quiz';
 import PasswordResetForm from './page/passReset';
+import ForgotPassword from './page/ForgotPassword';
+import AddModuleTrainer from './component/AddModuleTrainer';
 
 
 
@@ -42,6 +44,7 @@ function App() {
         
         <Route path="/register" element={<RegistrationPage/>}/>
         <Route path="/passReset" element={<PasswordResetForm/>}/>
+        <Route path="/forgotpassword" element={<ForgotPassword/>}/>
         <Route path="/allUser" element={<Axlldata/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/userdashboard" element={<UserDashboard/>}/>
@@ -49,6 +52,7 @@ function App() {
         <Route path="/sidebar" element={<Sidebar/>}/>
         <Route path="/addmodule" element={<AddModule/>}/>
         <Route path="/addusermodule" element={<AddUserModule/>}/>
+        <Route path="/addmoduletrainer" element={<AddModuleTrainer/>}/>
         <Route path="/addquiz" element={<AddQuizForm/>}/>
         <Route path="/user" element={<UserList/>}/>
         <Route path="/module" element={<ModuleList/>}/>

@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-// import RegistrationPage from './registration'; 
-import { useNavigate } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
-// import { Link } from 'react-router-dom';
-// import NAvbar from './NAvbar';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -56,11 +53,9 @@ const Login = () => {
     setEmail('');
     setPassword('');
   };
-  
 
   return (
     <div>
-    {/* <NAvbar></NAvbar> */}
       <section className="vh-100" style={{ backgroundColor: '#508bfc' }}>
         <div className="container py-5 h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
@@ -73,7 +68,6 @@ const Login = () => {
                       <input
                         type="email"
                         className="form-control form-control-lg"
-                        id="typeEmailX-2"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
@@ -84,7 +78,6 @@ const Login = () => {
                       <input
                         type="password"
                         className="form-control form-control-lg"
-                        id="typePasswordX-2"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
@@ -97,7 +90,7 @@ const Login = () => {
                     </div>
                     <button className="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
                   </form>
-                  {/* <Link to="/allUser" className="btn btn-secondary btn-lg btn-block mt-3">Go to Different Page</Link> */}
+                  <Link to="/forgotpassword" className="btn btn-link mt-3">Forgot Password?</Link>
                   <hr className="my-4" />
                 </div>
               </div>

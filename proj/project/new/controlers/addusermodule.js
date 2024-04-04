@@ -11,8 +11,16 @@ const addUserModule = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    console.log(user);
+    
+    // Check if the module ID is already present in the user's modules array
+    const isModuleAlreadyAdded = user.modules.some(module => module._id.toString() === selectedModule_id);
+    if (isModuleAlreadyAdded) {
+      return res.status(400).json({ error: 'Module already added to user' });
+    }
+
     // Add the selectedModule_id to the modules array of the user
-    user.modules.push(selectedModule_id);
+    user.modules.push({ _id: selectedModule_id });
 
     // Save the updated user
     await user.save();

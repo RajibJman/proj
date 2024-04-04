@@ -25,7 +25,14 @@ const moduleSchema = new Schema({
         type: Schema.Types.ObjectId, // Reference to Quiz collection's _id
         ref: 'Quiz', // Name of the referenced collection
         required: false
-    }
+    },
+    trainer: [{
+        register_id: {
+            type: mongoose.Schema.Types.ObjectId, // Corrected type to mongoose.Schema.Types.ObjectId
+            ref: 'Register', // Reference to another schema, replace 'Module' with your actual module schema name
+            required: false
+        }
+    }]
 });
 
 module.exports = mongoose.model('Module', moduleSchema);

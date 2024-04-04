@@ -13,6 +13,8 @@ const { createUser,getAllUsers,getUserById,deleteUser,updateUser } = require('..
 const { createEvent,getAllEvents,updateEvent,deleteEvent } = require('../controlers/EventController');
 const { getAllMarks,getMarksByModuleId,getMarksByUserId,addMarks } = require('../controlers/marksController');
 const updateModuleQuizId = require('../controlers/modulequiz');
+const handleForgotPasswordSubmission = require('../controlers/forgotpassController');
+const { addModuleTrainer } = require('../controlers/addmoduletrainer');
 
 
 
@@ -26,12 +28,12 @@ router.post('/register', requireAuth, createUser);
 router.get('/users', getAllUsers);
 router.get('/users/:id',requireAuth,getUserById);
 router.delete('/users/delete/:id', requireAuth, deleteUser);
-router.post('/users/updateuser/:id', requireAuth, updateUser);
+router.post('/users/updateuser/:id', updateUser);
 
 
 router.post('/modulequiz',updateModuleQuizId);
 
-
+router.post('/moduletrainer',addModuleTrainer);
 
 // Route for adding a module
 router.post('/addmodule',addModule);
@@ -51,6 +53,9 @@ router.delete('/modules/:Id',deleteModule);
 // router.post('/reset', passwordResetController.resetPassword);
 
 router.post('/reset-password',passwordResetController.resetPassword);
+
+// // Route for handling forgot password form submission
+router.post('/forgot-password', handleForgotPasswordSubmission);
 
 
 // router.post('/insertQuiz',insertQuizQuestion);
