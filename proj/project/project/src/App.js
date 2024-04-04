@@ -25,6 +25,9 @@ import QuizPage from './page/quiz';
 import PasswordResetForm from './page/passReset';
 import ForgotPassword from './page/ForgotPassword';
 import AddModuleTrainer from './component/AddModuleTrainer';
+import Profile from './page/Profile';
+import ModulePerformance from './page/ModulePerformance';
+import MarksAndModules from './page/UserResult';
 
 
 
@@ -61,7 +64,10 @@ function App() {
         <Route path="/quizmodule" element={<QuizModule/>}/>
         <Route path="/assesment" element={<AllModule/>}/>
         <Route path="/quiz" element={<QuizPage/>}/>
-        
+        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/performance" element={<ModulePerformance/>}/>
+        <Route path="/userresult" element={<MarksAndModules/>}/>
+
     </Routes>
     </BrowserRouter>
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Paper, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
 import Navbar from '../component/NAvbar';
-import axios from 'axios'; // Import axios for making HTTP requests
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   section: {
@@ -14,11 +14,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   heading: {
-    textAlign: 'center', // Center align the headings
-    marginBottom: theme.spacing(4), // Increase margin bottom
+    textAlign: 'center',
+    marginBottom: theme.spacing(4),
   },
   h5: {
-    textAlign: 'left', // Align h5 to the left
+    textAlign: 'left',
   },
 }));
 
@@ -28,26 +28,80 @@ const ModuleStatus = () => {
   const [ongoingModules, setOngoingModules] = useState([]);
   const [pendingModules, setPendingModules] = useState([]);
   const [expandedStatus, setExpandedStatus] = useState(null);
+  const [trainerMap, setTrainerMap] = useState({});
+  const [userRole, setUserRole] = useState('');
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
-    // Fetch module data from the API endpoint
-    axios.get('http://localhost:3000/api/auth/modules')
-      .then(response => {
-        // Filter modules based on status and update state accordingly
-        const completed = response.data.modules.filter(module => module.moduleStatus === 'complete');
-        const ongoing = response.data.modules.filter(module => module.moduleStatus === 'ongoing');
-        const pending = response.data.modules.filter(module => module.moduleStatus === 'pending');
+    // Fetch user role and userId from local storage
+    const role = localStorage.getItem('role');
+    const id = localStorage.getItem('userId');
+    setUserRole(role);
+    setUserId(id);
+
+    const fetchData = async () => {
+      try {
+        const userResponse = await axios.get(`http://localhost:3000/api/auth/users/${userId}`);
+        const userData = userResponse.data;
+
+        const moduleIds = userData.modules.map(module => module._id);
+        const modulesResponse = await axios.get('http://localhost:3000/api/auth/modules');
+        const allModules = modulesResponse.data.modules || [];
+
+        const userModules = allModules.filter(module => moduleIds.includes(module._id));
+
+        const completed = userModules.filter(module => module.moduleStatus === 'complete');
+        const ongoing = userModules.filter(module => module.moduleStatus === 'ongoing');
+        const pending = userModules.filter(module => module.moduleStatus === 'pending');
 
         setCompletedModules(completed);
         setOngoingModules(ongoing);
         setPendingModules(pending);
-      })
-      .catch(error => {
-        console.error('Error fetching module data:', error);
-      });
-  }, []);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  // Function to format date
+    if (userRole === 'Employee') {
+      fetchData();
+    } else {
+      // Fetch module data from the API endpoint
+      axios.get('http://localhost:3000/api/auth/modules')
+        .then(response => {
+          // Filter modules based on status and update state accordingly
+          const completed = response.data.modules.filter(module => module.moduleStatus === 'complete');
+          const ongoing = response.data.modules.filter(module => module.moduleStatus === 'ongoing');
+          const pending = response.data.modules.filter(module => module.moduleStatus === 'pending');
+
+          setCompletedModules(completed);
+          setOngoingModules(ongoing);
+          setPendingModules(pending);
+
+          // Extract unique trainer IDs for all modules
+          const allModules = [...completed, ...ongoing, ...pending];
+          const trainerIds = [...new Set(allModules.flatMap(module => module.trainer.map(trainer => trainer._id)))];
+
+          // Fetch trainer names for each trainer ID
+          axios.get('http://localhost:3000/api/auth/allData')
+            .then(response => {
+              const trainers = response.data.user.reduce((map, user) => {
+                if (trainerIds.includes(user._id)) {
+                  map[user._id] = user.name;
+                }
+                return map;
+              }, {});
+              setTrainerMap(trainers);
+            })
+            .catch(error => {
+              console.error('Error fetching trainer data:', error);
+            });
+        })
+        .catch(error => {
+          console.error('Error fetching module data:', error);
+        });
+    }
+  }, [userId, userRole]);
+
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     const formattedDate = date.toLocaleDateString();
@@ -55,9 +109,12 @@ const ModuleStatus = () => {
     return `${formattedDate} ${formattedTime}`;
   }
 
-  // Function to handle click on section
   const handleSectionClick = (status) => {
     setExpandedStatus(expandedStatus === status ? null : status);
+  };
+
+  const getTrainerName = (trainerId) => {
+    return trainerMap[trainerId] || 'Unknown';
   };
 
   return (
@@ -74,6 +131,7 @@ const ModuleStatus = () => {
                   <TableCell>Module Name</TableCell>
                   <TableCell>Start Date</TableCell>
                   <TableCell>End Date</TableCell>
+                  <TableCell>Trainer Name</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -82,6 +140,7 @@ const ModuleStatus = () => {
                     <TableCell>{module.moduleName}</TableCell>
                     <TableCell>{formatDate(module.startDate)}</TableCell>
                     <TableCell>{formatDate(module.endDate)}</TableCell>
+                    <TableCell>{module.trainer.map(trainer => getTrainerName(trainer._id)).join(', ')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -97,6 +156,7 @@ const ModuleStatus = () => {
                   <TableCell>Module Name</TableCell>
                   <TableCell>Start Date</TableCell>
                   <TableCell>End Date</TableCell>
+                  <TableCell>Trainer Name</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -105,6 +165,7 @@ const ModuleStatus = () => {
                     <TableCell>{module.moduleName}</TableCell>
                     <TableCell>{formatDate(module.startDate)}</TableCell>
                     <TableCell>{formatDate(module.endDate)}</TableCell>
+                    <TableCell>{module.trainer.map(trainer => getTrainerName(trainer._id)).join(', ')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -120,6 +181,7 @@ const ModuleStatus = () => {
                   <TableCell>Module Name</TableCell>
                   <TableCell>Start Date</TableCell>
                   <TableCell>End Date</TableCell>
+                  <TableCell>Trainer Name</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -128,6 +190,7 @@ const ModuleStatus = () => {
                     <TableCell>{module.moduleName}</TableCell>
                     <TableCell>{formatDate(module.startDate)}</TableCell>
                     <TableCell>{formatDate(module.endDate)}</TableCell>
+                    <TableCell>{module.trainer.map(trainer => getTrainerName(trainer._id)).join(', ')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

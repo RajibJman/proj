@@ -94,7 +94,7 @@ exports.getUserById = async (req, res) => {
 // Update user
 exports.updateUser = async (req, res) => {
     const { id } = req.params;
-    const { name, email, role, checkreset } = req.body;
+    const { name, email, role, checkreset, mobile, address } = req.body;
 
     console.log(req.body);
 
@@ -109,7 +109,9 @@ exports.updateUser = async (req, res) => {
         user.email = email || user.email;
         user.role = role || user.role;
         user.checkreset = checkreset || user.checkreset;
-        
+        // Add updates for mobile and address
+        user.mobile = mobile || user.mobile;
+        user.address = address || user.address;
 
         // Save the updated user
         const updatedUser = await user.save();
@@ -120,6 +122,7 @@ exports.updateUser = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 
 // Delete user

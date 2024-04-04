@@ -26,7 +26,7 @@ router.get('/allData', authController.allData);
 // Registration route with authentication middleware
 router.post('/register', requireAuth, createUser);
 router.get('/users', getAllUsers);
-router.get('/users/:id',requireAuth,getUserById);
+router.get('/users/:id',getUserById);
 router.delete('/users/delete/:id', requireAuth, deleteUser);
 router.post('/users/updateuser/:id', updateUser);
 

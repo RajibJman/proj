@@ -74,7 +74,7 @@ function AddModuleTrainer() {
       };
   
       // Send a POST request to the specified endpoint
-      fetch('http://localhost:3000/api/auth/addusermodule', {
+      fetch('http://localhost:3000/api/auth/moduletrainer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ function AddModuleTrainer() {
   return (
     <div>
       <AddUserModuleButton variant="contained" color="primary" onClick={handleDialogOpen}>
-        Add Module Triner
+        Add Module Trainer
       </AddUserModuleButton>
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <DialogTitle>Add Trainer for Module</DialogTitle>

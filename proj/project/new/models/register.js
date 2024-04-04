@@ -5,7 +5,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-
     email: {
         type: String,
         required: true,
@@ -20,14 +19,22 @@ const userSchema = new mongoose.Schema({
         enum: ['Intern', 'Employee'],
         required: true
     },
+    mobile: {
+        type: String, 
+        required: false
+    },
+    address: {
+        type: String,
+        required: false
+    },
     checkreset: {
         type: Boolean,
         default: false
     },
     results: [{
         module_id: {
-            type: mongoose.Schema.Types.ObjectId, // Corrected type to mongoose.Schema.Types.ObjectId
-            ref: 'Module', // Reference to another schema, replace 'Module' with your actual module schema name
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Module',
             required: false
         },
         marks: {
@@ -37,12 +44,11 @@ const userSchema = new mongoose.Schema({
     }],
     modules: [{
         module_id: {
-            type: mongoose.Schema.Types.ObjectId, // Corrected type to mongoose.Schema.Types.ObjectId
-            ref: 'Module', // Reference to another schema, replace 'Module' with your actual module schema name
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Module',
             required: false
         }
     }]
-
 });
 
 module.exports = mongoose.model('Register', userSchema);
