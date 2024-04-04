@@ -28,20 +28,46 @@ function AddUserModule() {
   const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/auth/allData")
-      .then((response) => response.json())
-      .then((data) => {
-        const filteredUsers = data.user.filter(user => user.role === 'Employee');
-        setUsers(filteredUsers);
-      })
-      .catch((error) => console.error("Error fetching user data:", error));
-  
-    fetch("http://localhost:3000/api/auth/modules")
-      .then((response) => response.json())
-      .then((data) => setModules(data.modules))
-      .catch((error) => console.error("Error fetching module data:", error));
+    fetchUserData();
+    fetchModuleData();
   }, []);
-  
+
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch("http://localhost:3000/api/auth/allData", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      const filteredUsers = data.user.filter(user => user.role === 'Employee');
+      setUsers(filteredUsers);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const fetchModuleData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch("http://localhost:3000/api/auth/modules", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setModules(data.modules);
+    } catch (error) {
+      console.error("Error fetching module data:", error);
+    }
+  };
 
   const handleUserChange = (event) => {
     setSelectedUser(event.target.value);
@@ -59,50 +85,50 @@ function AddUserModule() {
     setOpenDialog(false);
   };
 
-  const addUserModule = () => {
+  const addUserModule = async () => {
     if (selectedUser && selectedModule) {
+      const token = localStorage.getItem('token');
       const requestBody = {
         selectedUser_id: selectedUser,
         selectedModule_id: selectedModule
       };
-  
-      fetch('http://localhost:3000/api/auth/addusermodule', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      })
-        .then(response => {
-          switch (response.status) {
-            case 200:
-              return response.json();
-            case 400:
-              throw new Error('Module already added to user');
-            case 404:
-              throw new Error('User not found');
-            case 500:
-              throw new Error('Internal server error');
-            default:
-              throw new Error('Unknown error occurred');
-          }
-        })
-        .then(data => {
-          console.log('Module added for user:', data);
-          alert('Module added successfully'); // Success alert
-          setSelectedUser("");
-          setSelectedModule("");
-          handleDialogClose();
-        })
-        .catch(error => {
-          console.error('Error adding module:', error.message);
-          alert(error.message); // Error alert
+
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/addusermodule', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(requestBody),
         });
+
+        if (!response.ok) {
+          let errorMessage = 'Unknown error occurred';
+          if (response.status === 400) {
+            errorMessage = 'Module already added to user';
+          } else if (response.status === 404) {
+            errorMessage = 'User not found';
+          } else if (response.status === 500) {
+            errorMessage = 'Internal server error';
+          }
+          throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+        console.log('Module added for user:', data);
+        alert('Module added successfully');
+        setSelectedUser("");
+        setSelectedModule("");
+        handleDialogClose();
+      } catch (error) {
+        console.error('Error adding module:', error.message);
+        alert(error.message);
+      }
     } else {
-      alert('Please select a user and a module.'); // Missing input alert
+      alert('Please select a user and a module.');
     }
   };
-  
 
   return (
     <div>

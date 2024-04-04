@@ -11,8 +11,6 @@ import QuizModule from '../component/QuizModule';
 import AddQuizForm from '../component/addquiz';
 import AddModuleTrainer from '../component/AddModuleTrainer';
 
-
-
 const localizer = momentLocalizer(moment);
 
 const Dashboard = () => {
@@ -23,7 +21,12 @@ const Dashboard = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/getevent');
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3000/api/auth/getevent', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       if (response.ok) {
         const eventData = await response.json();
         const formattedEvents = eventData.map(event => ({
@@ -47,17 +50,6 @@ const Dashboard = () => {
     fetchEvents();
   }, []);
 
-  const handleSelectSlot = (slotInfo) => {
-    setShowDialog(true);
-    setSelectedDate(slotInfo.start);
-    setSelectedEvent(null);
-  };
-
-  const handleSelectEvent = (event) => {
-    setShowDialog(true);
-    setSelectedEvent(event);
-  };
-
   const handleDialogClose = () => {
     setShowDialog(false);
     setSelectedDate(null);
@@ -72,10 +64,12 @@ const Dashboard = () => {
     };
 
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:3000/api/auth/createevent', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(newEvent)
       });
@@ -95,10 +89,12 @@ const Dashboard = () => {
 
   const handleUpdateEvent = async (event) => {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:3000/api/auth/events/${selectedEvent.id}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(event)
       });
@@ -118,8 +114,12 @@ const Dashboard = () => {
 
   const handleDeleteEvent = async () => {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:3000/api/auth/delevent/${selectedEvent.id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
 
       if (response.ok) {
@@ -134,6 +134,19 @@ const Dashboard = () => {
 
     handleDialogClose();
   };
+
+  const handleSelectSlot = (slotInfo) => {
+    setShowDialog(true);
+    setSelectedDate(slotInfo.start);
+    setSelectedEvent(null);
+  };
+
+  const handleSelectEvent = (event) => {
+    setShowDialog(true);
+    setSelectedEvent(event);
+  };
+
+  // Remaining components and functions...
 
   return (
     <div>
@@ -160,26 +173,16 @@ const Dashboard = () => {
                 Module
               </Button>
             </li>
-            
-            
             <li style={{ marginBottom: '10px' }}>
-              
-                <AddUserModule></AddUserModule>
-              
+              <AddUserModule></AddUserModule>
             </li>
             <li style={{ marginBottom: '10px' }}>
-              
               <QuizModule></QuizModule>
-            
-          </li>
-
-          <li style={{ marginBottom: '10px' }}>
-              
+            </li>
+            <li style={{ marginBottom: '10px' }}>
               <AddModuleTrainer></AddModuleTrainer>
-            
-          </li>
-
-          <li style={{ marginBottom: '10px' }}>
+            </li>
+            <li style={{ marginBottom: '10px' }}>
               <Button
                 variant="contained"
                 style={{ backgroundColor: '#ff9800', fontSize: '1.2rem', width: '100%', marginBottom: '10px' }}

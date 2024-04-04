@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     textAlign: 'center',
     marginBottom: theme.spacing(4),
+    color: 'orange',
   },
   button: {
     width: '100%',
@@ -38,6 +39,12 @@ const useStyles = makeStyles((theme) => ({
   },
   moduleCard: {
     marginBottom: theme.spacing(2),
+  },
+  tableHeading: {
+    fontSize: '1.2rem',
+    fontWeight: 'bold',
+    backgroundColor: 'green',
+    color: 'white',
   },
 }));
 
@@ -96,8 +103,12 @@ function ModulePerformance() {
   }
 
   const handleModuleClick = async (moduleId) => {
-    setSelectedModuleId(moduleId);
-    await fetchModulePerformance(moduleId);
+    if (selectedModuleId === moduleId) {
+      setSelectedModuleId(null); // If the button is re-clicked, close the data table
+    } else {
+      setSelectedModuleId(moduleId);
+      await fetchModulePerformance(moduleId);
+    }
   };
 
   return (
@@ -119,8 +130,8 @@ function ModulePerformance() {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>User Name</TableCell>
-                        <TableCell>Marks</TableCell>
+                        <TableCell className={classes.tableHeading}>User Name</TableCell>
+                        <TableCell className={classes.tableHeading}>Marks</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>

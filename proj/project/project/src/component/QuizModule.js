@@ -7,12 +7,7 @@ const StyledFormControl = styled(FormControl)({
   marginBottom: 16,
 });
 
-const StyledButton = styled(Button)({
-  marginTop: 16,
-});
-
 const OrangeButton = styled(Button)({
-//   backgroundColor: '#ff9800',
   fontSize: '1.2rem',
   width: '100%',
   marginBottom: '10px',
@@ -26,22 +21,45 @@ function QuizModule() {
   const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/auth/modules")
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.modules) {
-          setModules(data.modules);
-        } else {
-          console.error("Modules data not found:", data);
-        }
-      })
-      .catch((error) => console.error("Error fetching module data:", error));
-
-    fetch("http://localhost:3000/api/auth/alltopics")
-      .then((response) => response.json())
-      .then((data) => setQuizzes(data))
-      .catch((error) => console.error("Error fetching quiz data:", error));
+    fetchModules();
+    fetchQuizzes();
   }, []);
+
+  const fetchModules = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch("http://localhost:3000/api/auth/modules", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setModules(data.modules);
+    } catch (error) {
+      console.error("Error fetching module data:", error);
+    }
+  };
+
+  const fetchQuizzes = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch("http://localhost:3000/api/auth/alltopics", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setQuizzes(data);
+    } catch (error) {
+      console.error("Error fetching quiz data:", error);
+    }
+  };
 
   const handleModuleChange = (event) => {
     setSelectedModule(event.target.value);
@@ -59,40 +77,42 @@ function QuizModule() {
     setOpenDialog(false);
   };
 
-  const addUserModule = () => {
+  const addModuleQuiz = async () => {
     if (selectedModule && selectedQuiz) {
-      // Prepare the request body
+      const token = localStorage.getItem('token');
       const requestBody = {
         moduleId: selectedModule,
         quizId: selectedQuiz
       };
-  
-      // Send a POST request to the specified endpoint
-      fetch('http://localhost:3000/api/auth//modulequiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-        
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('Module added for user:', data);
-          handleDialogClose(); // Close the dialog after successful update
-          alert('Module added successfully');
-          setSelectedModule("");
+
+      try {
+        const response = await fetch('http://localhost:3000/api/auth/modulequiz', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add quiz to module');
+        }
+
+        const data = await response.json();
+        console.log('Quiz added to module:', data);
+        alert('Quiz added successfully');
+        setSelectedModule("");
         setSelectedQuiz("");
-        })
-        .catch(error => console.error('Error adding module:', error));
+        handleDialogClose();
+      } catch (error) {
+        console.error('Error adding quiz to module:', error);
+        alert('Failed to add quiz to module');
+      }
+    } else {
+      alert('Please select a module and a quiz');
     }
   };
-  
 
   return (
     <div>
@@ -139,7 +159,7 @@ function QuizModule() {
           <Button onClick={handleDialogClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={addUserModule} color="primary">
+          <Button onClick={addModuleQuiz} color="primary">
             Add Quiz
           </Button>
         </DialogActions>

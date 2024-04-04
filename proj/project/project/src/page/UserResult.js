@@ -1,4 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper
+} from '@mui/material';
 
 function MarksAndModules() {
     const [moduleData, setModuleData] = useState([]);
@@ -31,12 +40,8 @@ function MarksAndModules() {
         const marksUrl = `http://localhost:3000/api/auth/marks/user/${userId}`;
         const modulesUrl = 'http://localhost:3000/api/auth/modules';
 
-        console.log("Fetching data...");
-
         Promise.all([fetchData(marksUrl), fetchData(modulesUrl)])
             .then(([marksData, moduleData]) => {
-                console.log("Marks data:", marksData);
-                console.log("Module data:", moduleData);
                 setMarksData(marksData);
                 setModuleData(moduleData.modules);
                 setIsLoading(false);
@@ -51,22 +56,34 @@ function MarksAndModules() {
     // Display component
     return (
         <div>
-            <h1>Marks and Modules</h1>
+            <div style={{ textAlign: 'center', color: 'orange' }}>
+                <h1>RESULTS</h1>
+            </div>
             {isLoading && <p>Loading...</p>}
             {error && <p>Error: {error}</p>}
-            {!isLoading && !error &&
-                <div>
-                    {marksData.map((mark, index) => {
-                        const module = moduleData.find(module => module._id === mark.moduleId);
-                        return (
-                            <div key={index}>
-                                <p>Module Name: {module ? module.moduleName : "Module Not Found"}</p>
-                                <p>Marks: {mark.marks}</p>
-                            </div>
-                        );
-                    })}
-                </div>
-            }
+            {!isLoading && !error && (
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead style={{ backgroundColor: '#5AAA66' }}>
+                            <TableRow>
+                                <TableCell style={{ fontSize: '1.2em', fontWeight: 'bold', color: 'white' }}>Module</TableCell>
+                                <TableCell style={{ fontSize: '1.2em', fontWeight: 'bold', color: 'white' }}>Marks</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {marksData.map((mark, index) => {
+                                const module = moduleData.find(module => module._id === mark.moduleId);
+                                return (
+                                    <TableRow key={index}>
+                                        <TableCell>{module ? module.moduleName : "Module Not Found"}</TableCell>
+                                        <TableCell>{mark.marks}</TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )}
         </div>
     );
 }

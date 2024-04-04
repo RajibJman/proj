@@ -140,8 +140,8 @@ function UserList() {
               value={updateRole}
               onChange={(e) => setUpdateRole(e.target.value)}
             >
-              <MenuItem value="user">User</MenuItem>
-              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="Intern">Intern</MenuItem>
+              <MenuItem value="Employee">Employee</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>

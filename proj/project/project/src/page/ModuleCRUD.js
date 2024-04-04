@@ -30,7 +30,12 @@ function ModuleList() {
 
   const fetchModules = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/auth/modules');
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:3000/api/auth/modules', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setModules(response.data.modules);
     } catch (error) {
       console.error('Error fetching modules:', error);
@@ -60,13 +65,18 @@ function ModuleList() {
 
   const addModule = async () => {
     try {
+      const token = localStorage.getItem('token');
       const moduleData = {
         moduleName,
         startDate,
         endDate
       };
 
-      await axios.post('http://localhost:3000/api/auth/addmodule', moduleData);
+      await axios.post('http://localhost:3000/api/auth/addmodule', moduleData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       fetchModules();
       setOpenAdd(false);
       alert('Module added successfully!');
@@ -78,13 +88,18 @@ function ModuleList() {
 
   const updateModule = async () => {
     try {
+      const token = localStorage.getItem('token');
       const moduleData = {
         moduleName: updateModuleName,
         startDate: updateStartDate,
         endDate: updateEndDate
       };
 
-      await axios.post(`http://localhost:3000/api/auth/modules/${updateModuleId}`, moduleData);
+      await axios.post(`http://localhost:3000/api/auth/modules/${updateModuleId}`, moduleData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       fetchModules();
       setOpenUpdate(false);
       alert('Module updated successfully!');
@@ -96,7 +111,12 @@ function ModuleList() {
 
   const deleteModule = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/auth/modules/${id}`);
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:3000/api/auth/modules/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       setModules(prevModules => prevModules.filter(module => module._id !== id));
       alert('Module deleted successfully!');
     } catch (error) {
