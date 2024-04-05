@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, Grid, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import './ForgotPassword.css';
+// import './ForgotPassword.css';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');

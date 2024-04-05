@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 import './PasswordResetForm.css';
+import Navbar from '../component/Navbar';
 
 
 function PasswordResetForm() {
@@ -45,6 +47,8 @@ function PasswordResetForm() {
     };
 
     return (
+        <div>
+            <Navbar></Navbar>
         <div className="password-reset-container">
             <div className="password-reset-form">
                 <h2>Password Reset</h2>
@@ -66,6 +70,7 @@ function PasswordResetForm() {
                     </div>
                 </form>
             </div>
+        </div>
         </div>
     );
 }
