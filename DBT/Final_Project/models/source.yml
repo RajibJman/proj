@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: Final_Project
+    database: FinalProject
+    schema: public
+    tables:
+      - name: events
+      - name: marks
+      - name: modules
+      - name: quizzes
+      - name: registers
