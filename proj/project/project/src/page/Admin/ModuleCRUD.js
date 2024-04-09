@@ -14,11 +14,10 @@ import {
   TextField,
   makeStyles,
   Grid,
-  Box // Import Box component for spacing
+  MenuItem // Import MenuItem for dropdown options
 } from '@material-ui/core';
 import axios from 'axios';
 import Navbar from '../../component/Navbar';
-
 
 const useStyles = makeStyles((theme) => ({
   dialogContent: {
@@ -53,6 +52,8 @@ function ModuleList() {
   const [moduleName, setModuleName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [level, setLevel] = useState('basic'); // Default level value
+  const [traineeCount, setTraineeCount] = useState('');
 
   useEffect(() => {
     fetchModules();
@@ -99,7 +100,9 @@ function ModuleList() {
       const moduleData = {
         moduleName,
         startDate,
-        endDate
+        endDate,
+        level,
+        traineeCount
       };
 
       await axios.post('http://localhost:3000/api/auth/addmodule', moduleData, {
@@ -122,7 +125,9 @@ function ModuleList() {
       const moduleData = {
         moduleName: updateModuleName,
         startDate: updateStartDate,
-        endDate: updateEndDate
+        endDate: updateEndDate,
+        level,
+        traineeCount
       };
 
       await axios.post(`http://localhost:3000/api/auth/modules/${updateModuleId}`, moduleData, {
@@ -158,7 +163,7 @@ function ModuleList() {
   return (
     <div>
       <Navbar></Navbar>
-      <Grid container alignItems="center" style={{marginTop:'10px'}}>
+      <Grid container alignItems="center" style={{ marginTop: '10px' }}>
         <Grid item xs>
           <Typography variant="h4" gutterBottom>Module Details</Typography>
         </Grid>
@@ -172,6 +177,8 @@ function ModuleList() {
             <TableCell>Module Name</TableCell>
             <TableCell>Start Date</TableCell>
             <TableCell>End Date</TableCell>
+            <TableCell>Level</TableCell>
+            <TableCell>Trainee Count</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -179,8 +186,10 @@ function ModuleList() {
           {modules.map(module => (
             <TableRow key={module._id}>
               <TableCell>{module.moduleName}</TableCell>
-              <TableCell>{new Date(module.startDate).toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', month: 'numeric', day: 'numeric'})}</TableCell>
-              <TableCell>{new Date(module.endDate).toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', month: 'numeric', day: 'numeric'})}</TableCell>
+              <TableCell>{new Date(module.startDate).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', month: 'numeric', day: 'numeric' })}</TableCell>
+              <TableCell>{new Date(module.endDate).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', month: 'numeric', day: 'numeric' })}</TableCell>
+              <TableCell>{module.level}</TableCell>
+              <TableCell>{module.traineeCount}</TableCell>
               <TableCell className={classes.actionButtons}>
                 <Button variant="contained" color="primary" onClick={() => handleUpdateOpen(module._id, module.moduleName, module.startDate, module.endDate)}>Update</Button>
                 <Button variant="contained" color="secondary" onClick={() => deleteModule(module._id)}>Delete</Button>
@@ -225,6 +234,30 @@ function ModuleList() {
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
           />
+          <TextField
+            className={classes.textField}
+            margin="dense"
+            id="level"
+            select
+            label="Level"
+            fullWidth
+            value={level}
+            onChange={(e) => setLevel(e.target.value)}
+          >
+            <MenuItem value="basic">Basic</MenuItem>
+            <MenuItem value="intermediate">Intermediate</MenuItem>
+            <MenuItem value="advanced">Advanced</MenuItem>
+          </TextField>
+          <TextField
+            className={classes.textField}
+            margin="dense"
+            id="traineeCount"
+            label="Trainee Count"
+            type="number"
+            fullWidth
+            value={traineeCount}
+            onChange={(e) => setTraineeCount(e.target.value)}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAddClose} color="primary">
@@ -235,8 +268,8 @@ function ModuleList() {
           </Button>
         </DialogActions>
       </Dialog>
-      
-      {/* Update Dialog */}
+
+      {/* Update Module Dialog */}
       <Dialog open={openUpdate} onClose={handleUpdateClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Update Module</DialogTitle>
         <DialogContent className={classes.dialogContent}>
@@ -270,6 +303,30 @@ function ModuleList() {
             fullWidth
             value={updateEndDate}
             onChange={(e) => setUpdateEndDate(e.target.value)}
+          />
+          <TextField
+            className={classes.textField}
+            margin="dense"
+            id="updateLevel"
+            select
+            label="Level"
+            fullWidth
+            value={level}
+            onChange={(e) => setLevel(e.target.value)}
+          >
+            <MenuItem value="basic">Basic</MenuItem>
+            <MenuItem value="intermediate">Intermediate</MenuItem>
+            <MenuItem value="advanced">Advanced</MenuItem>
+          </TextField>
+          <TextField
+            className={classes.textField}
+            margin="dense"
+            id="updateTraineeCount"
+            label="Trainee Count"
+            type="number"
+            fullWidth
+            value={traineeCount}
+            onChange={(e) => setTraineeCount(e.target.value)}
           />
         </DialogContent>
         <DialogActions>

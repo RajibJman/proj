@@ -7,7 +7,7 @@ import RegistrationPage from './component/registration';
 // import PasswordResetForm from './page/passReset';
 // import Axlldata from './component/Alldata';
 import Dashboard from './page/Admin/Dashboard';
-import AddModule from './component/AddModule';
+import AddModule from './component/AddModulequizz';
 // import Navbar from './component/NAvbar';
 import AddUserModule from './component/AddUserModule';
 // import PasswordResetForm from './passReset';

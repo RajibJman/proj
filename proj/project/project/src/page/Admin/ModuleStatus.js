@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Paper, Table, TableHead, TableBody, TableCell, TableRow } from '@material-ui/core';
 import Navbar from '../../component/Navbar';
 import axios from 'axios';
-import { colors } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
   section: {
@@ -13,23 +12,19 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     '&.expanded': {
       background: theme.palette.grey[200],
-    
     },
   },
   heading: {
     textAlign: 'center',
     marginBottom: theme.spacing(4),
-    
-    
   },
   h5: {
     textAlign: 'left',
     color: 'blue',
-    // backgroundColor: 'orange'
   },
-    tableHeading: {
-    fontSize: '1.2rem', // Increase font size for table headings
-    fontWeight: 'bold', // Make table headings bold
+  tableHeading: {
+    fontSize: '1.2rem',
+    fontWeight: 'bold',
   },
 }));
 
@@ -130,7 +125,7 @@ const ModuleStatus = () => {
     const formattedDate = date.toLocaleDateString();
     const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     return `${formattedDate} ${formattedTime}`;
-  }
+  };
 
   const handleSectionClick = (status) => {
     setExpandedStatus(expandedStatus === status ? null : status);
@@ -145,16 +140,18 @@ const ModuleStatus = () => {
       <Navbar />
       <Typography variant="h3" gutterBottom className={classes.heading}>Module Status</Typography>
       <div className={classes.moduleStatus}>
+        {/* Completed Modules Section */}
         <Paper className={`${classes.section} ${expandedStatus === 'completed' ? 'expanded' : ''}`} onClick={() => handleSectionClick('completed')}>
           <Typography variant="h5" gutterBottom className={`${classes.heading} ${classes.h5}`}>Completed Modules ({completedModules.length})</Typography>
           {expandedStatus === 'completed' && (
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Module Name</TableCell>
-                  <TableCell>Start Date</TableCell>
-                  <TableCell>End Date</TableCell>
-                  <TableCell>Trainer Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Module Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Start Date</TableCell>
+                  <TableCell className={classes.tableHeading}>End Date</TableCell>
+                  <TableCell className={classes.tableHeading}>Trainer Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Level</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -164,6 +161,7 @@ const ModuleStatus = () => {
                     <TableCell>{formatDate(module.startDate)}</TableCell>
                     <TableCell>{formatDate(module.endDate)}</TableCell>
                     <TableCell>{module.trainer.map(trainer => getTrainerName(trainer._id)).join(', ')}</TableCell>
+                    <TableCell>{module.level}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -171,16 +169,18 @@ const ModuleStatus = () => {
           )}
         </Paper>
 
+        {/* Ongoing Modules Section */}
         <Paper className={`${classes.section} ${expandedStatus === 'ongoing' ? 'expanded' : ''}`} onClick={() => handleSectionClick('ongoing')}>
           <Typography variant="h5" gutterBottom className={`${classes.heading} ${classes.h5}`}>Ongoing Modules ({ongoingModules.length})</Typography>
           {expandedStatus === 'ongoing' && (
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Module Name</TableCell>
-                  <TableCell>Start Date</TableCell>
-                  <TableCell>End Date</TableCell>
-                  <TableCell>Trainer Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Module Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Start Date</TableCell>
+                  <TableCell className={classes.tableHeading}>End Date</TableCell>
+                  <TableCell className={classes.tableHeading}>Trainer Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Level</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -190,6 +190,7 @@ const ModuleStatus = () => {
                     <TableCell>{formatDate(module.startDate)}</TableCell>
                     <TableCell>{formatDate(module.endDate)}</TableCell>
                     <TableCell>{module.trainer.map(trainer => getTrainerName(trainer._id)).join(', ')}</TableCell>
+                    <TableCell>{module.level}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -197,16 +198,18 @@ const ModuleStatus = () => {
           )}
         </Paper>
 
+        {/* Pending Modules Section */}
         <Paper className={`${classes.section} ${expandedStatus === 'pending' ? 'expanded' : ''}`} onClick={() => handleSectionClick('pending')}>
           <Typography variant="h5" gutterBottom className={`${classes.heading} ${classes.h5}`}>Pending Modules ({pendingModules.length})</Typography>
           {expandedStatus === 'pending' && (
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Module Name</TableCell>
-                  <TableCell>Start Date</TableCell>
-                  <TableCell>End Date</TableCell>
-                  <TableCell>Trainer Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Module Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Start Date</TableCell>
+                  <TableCell className={classes.tableHeading}>End Date</TableCell>
+                  <TableCell className={classes.tableHeading}>Trainer Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Level</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -216,6 +219,7 @@ const ModuleStatus = () => {
                     <TableCell>{formatDate(module.startDate)}</TableCell>
                     <TableCell>{formatDate(module.endDate)}</TableCell>
                     <TableCell>{module.trainer.map(trainer => getTrainerName(trainer._id)).join(', ')}</TableCell>
+                    <TableCell>{module.level}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -223,16 +227,18 @@ const ModuleStatus = () => {
           )}
         </Paper>
 
+        {/* Training Modules Section */}
         <Paper className={`${classes.section} ${expandedStatus === 'training' ? 'expanded' : ''}`} onClick={() => handleSectionClick('training')}>
           <Typography variant="h5" gutterBottom className={`${classes.heading} ${classes.h5}`}>Training Modules ({trainingModules.length})</Typography>
           {expandedStatus === 'training' && (
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Module Name</TableCell>
-                  <TableCell>Start Date</TableCell>
-                  <TableCell>End Date</TableCell>
-                  <TableCell>Trainer Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Module Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Start Date</TableCell>
+                  <TableCell className={classes.tableHeading}>End Date</TableCell>
+                  <TableCell className={classes.tableHeading}>Trainer Name</TableCell>
+                  <TableCell className={classes.tableHeading}>Level</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -242,6 +248,7 @@ const ModuleStatus = () => {
                     <TableCell>{formatDate(module.startDate)}</TableCell>
                     <TableCell>{formatDate(module.endDate)}</TableCell>
                     <TableCell>{module.trainer.map(trainer => getTrainerName(trainer._id)).join(', ')}</TableCell>
+                    <TableCell>{module.level}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

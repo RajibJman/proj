@@ -2,14 +2,16 @@ const Module = require('../models/module');
 
 // Controller function to add a module
 exports.addModule = async (req, res) => {
-    const { moduleName, startDate, endDate } = req.body;
+    const { moduleName, startDate, endDate,level,traineeCount } = req.body;
 
     try {
         // Create a new module instance
         const newModule = new Module({
             moduleName,
             startDate,
-            endDate
+            endDate,
+            level,
+            traineeCount
             // quizId
         });
 

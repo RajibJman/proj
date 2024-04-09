@@ -14,8 +14,6 @@ import {
   TableRow,
   Paper,
 } from '@material-ui/core';
-import Navbar from '../../component/Navbar';
-
 
 const useStyles = makeStyles((theme) => ({
   heading: {
@@ -114,19 +112,16 @@ function ModulePerformance() {
   };
 
   return (
-    <div>
-      <Navbar></Navbar>
-    <div className={classes.modulePerformance} >
-      <h1 className={classes.heading}>PERFORMANCE</h1>
+    <div className={classes.modulePerformance}>
+      <h1 className={classes.heading}>Module Names</h1>
       {Object.entries(moduleNames).map(([moduleId, moduleName]) => (
-        <div key={moduleId} className={classes.moduleCard} style={{backgroundColor:'orange'}}>
+        <div key={moduleId} className={classes.moduleCard}>
           <Button 
             className={classes.button} 
             onClick={() => handleModuleClick(moduleId)}
             variant="contained"
-            
           >
-            <Typography variant="h6" >{moduleName}</Typography>
+            <Typography variant="h6">{moduleName}</Typography>
           </Button>
           {selectedModuleId === moduleId && moduleData && (
             <Card>
@@ -154,7 +149,6 @@ function ModulePerformance() {
           )}
         </div>
       ))}
-    </div>
     </div>
   );
 }

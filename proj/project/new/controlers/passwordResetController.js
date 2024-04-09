@@ -10,14 +10,17 @@ exports.resetPassword = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-
+        console.log(user.password == oldPassword)
         // Update user's password
         if(user.password==oldPassword)
         {
+            console.log('1')
             user.password = newPassword;
-
-            user.checkreset=true;  
+            console.log('2')
+            user.checkreset=true;
+            console.log('3')  
             await user.save();
+            console.log('4')
 
         res.status(200).json({ message: 'Password reset successfully' });
         }

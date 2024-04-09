@@ -17,22 +17,29 @@ const moduleSchema = new Schema({
     moduleStatus: {
         type: String,
         enum: ['pending', 'ongoing', 'complete'],
-        default: 'pending',
-        required: false
+        default: 'pending'
     },
-    // Add reference to Quiz collection _id
     quizId: {
-        type: Schema.Types.ObjectId, // Reference to Quiz collection's _id
-        ref: 'Quiz', // Name of the referenced collection
+        type: Schema.Types.ObjectId,
+        ref: 'Quiz',
         required: false
     },
     trainer: [{
         register_id: {
-            type: mongoose.Schema.Types.ObjectId, // Corrected type to mongoose.Schema.Types.ObjectId
-            ref: 'Register', // Reference to another schema, replace 'Module' with your actual module schema name
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Register',
             required: false
         }
-    }]
+    }],
+    level: {
+        type: String,
+        enum: ['basic', 'intermediate', 'advanced'],
+        default: 'basic'
+    },
+    traineeCount: {
+        type: Number,
+        default: 0
+    }
 });
 
 module.exports = mongoose.model('Module', moduleSchema);

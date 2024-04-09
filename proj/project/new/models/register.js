@@ -31,17 +31,6 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    results: [{
-        module_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Module',
-            required: false
-        },
-        marks: {
-            type: Number,
-            required: false
-        }
-    }],
     modules: [{
         module_id: {
             type: mongoose.Schema.Types.ObjectId,
